@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include "Queue.c"
-#include "JobSchedulerThread.c"
-#include "CPUSchedulerThread.c"
+#include "Planner.c"
 
 int main(void){
     /*
@@ -12,6 +10,6 @@ int main(void){
     //dequeue(q);
     //dequeue(q);
     printQueue(q); */
-    JobSchedulerThread *jobScheduler = createJobScheduler();
-    CPUSchedulerThread *cpuScheduler = createCPUScheduler();
+    Planner *planner = createPlanner();
+    
 }
