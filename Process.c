@@ -15,6 +15,7 @@ Process *createProcess(int burst,int arrival, PCB *pcb){
     p->arrival = arrival;
     p->initialBurst = burst;
     p->actualBurst = burst;
+    p->pcb = pcb;
     printf("Process created!\n");
     return p;
 }
