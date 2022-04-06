@@ -21,6 +21,10 @@ void *leerDatos(void *arg){
     unsigned burst;
     unsigned priority;
 
+    unsigned espera;
+
+    char *mensaje[2];
+
     char *posiblePuntero;
     int indice0;
     int indice1;
@@ -44,7 +48,7 @@ void *leerDatos(void *arg){
         
         if(!posiblePuntero) {
             printf(stderr, "No coincide el formato del contenido del archivo.\n");
-            return 0
+            return 0;
         }
 
         //ESPERAR DE MINESPERA A MAXESPERA ANTES DE OBTENER LOS DATOS
@@ -65,19 +69,31 @@ void *leerDatos(void *arg){
         
         if(!posiblePuntero) {
             printf(stderr, "No coincide el formato del contenido del archivo.\n");
-            return 0
+            return 0;
         }
 
         //Obtiene el indice obtener el segundo valor
         indice1 = posiblePuntero - buffer;
         
         //Obtiene la prioridad
-        indice++; 
+        indice0++; 
         strncpy(value, buffer + indice0, indice1-indice0);
         priority = atoi(value);
 
+        //Prepara el mensaje
+        mensaje[0] = burst+'0';
+        mensaje[1] = priority+'0';
+
 
         //ESPERA DOS SEGUNDOS Y ENVÍA LA INFORMACIÓN
+
+        /*//PRUEBA
+        printf("Prioridad: %lu. \n", priority);
+        printf("Burst: %lu. \n", burst);
+        printf("Espera: %lu. \n", espera);
+
+        printf("-------------------------\n");
+        //*/
     }
     
     fclose(archivo);
@@ -86,9 +102,15 @@ void *leerDatos(void *arg){
 }
 
 int main() {
-    char *nombre = "archivo_prueba.txt";
+    char *nombre = "archivo.txt";
+    
+    pthread_t hilo1;
+    pthread_create (&hilo1, NULL, leerDatos, (void *) &nombre);
+    
+    pthread_join (hilo1, NULL );
+
 
     leerDatos(nombre);
-    return 1;
+    return 0;
 
 }

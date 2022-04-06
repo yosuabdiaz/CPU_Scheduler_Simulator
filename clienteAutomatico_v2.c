@@ -27,10 +27,10 @@ void *generarDatos(void *arg){
     unsigned priority;
 
     unsigned espera;
-    char *mensaje[3];    
+    char *mensaje[2];    
 
     //Usar un flag para detenerlo.
-    while(flag){
+    while(priority<5){//De momento usa esa condición para hacer las pruebas
 
         //ESPERA ENTRE minEspera A maxEspera
         espera = random() % ((prmts->maxEspera) - (prmts->minEspera)+1) + (prmts->minEspera);
@@ -53,7 +53,7 @@ void *generarDatos(void *arg){
         printf("Prioridad: %lu. \n", priority);
         printf("Burst: %lu. \n", burst);
         printf("-------------------------\n");
-        */     
+        //*/     
     }
 }
 
