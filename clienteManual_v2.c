@@ -1,3 +1,11 @@
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <time.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <unistd.h>
+
 #include <stdio.h>  
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +19,50 @@
 
 #define MICROSECONDOS 1000000
 
+void *enviarMensaje(void *arg){
+    int sockfd;
+    struct sockaddr_in servaddr;
+
+    char *buffer;
+    buffer = (char *)arg;
+
+
+    //Crea el socket para llamar al servidor
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    bzero(&servaddr, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(22000);
+    //Creo que esta IP cambia para cada maquina donde lo corra, revisar
+    inet_pton(AF_INET, "10.0.2.15", &(servaddr.sin_addr));
+
+    //Espera 2 segundos antes de enviar el mensaje
+    usleep (2*MICROSECONDOS);
+
+
+    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));//llama
+
+    printf("Connected to server...\n");
+
+    //bzero(buffer, 1024);
+    //strcpy(buffer, "HELLO, PROCESS 01\n");
+
+    printf("Client: %s \n\n", buffer);
+    send(sockfd, buffer, strlen(buffer), 0);
+
+    
+
+    bzero(buffer, 1024);
+    recv(sockfd, buffer, sizeof(buffer),0);
+
+    //printf("Server: %s \n", buffer);
+
+    close(sockfd);
+    //printf("Server Closed\n");
+
+}
+
+
 void *leerDatos(void *arg){
 
     char *nombre;
@@ -23,7 +75,7 @@ void *leerDatos(void *arg){
 
     unsigned espera;
 
-    char *mensaje[2];
+    char mensaje[2];
 
     char *posiblePuntero;
     int indice0;
@@ -36,6 +88,7 @@ void *leerDatos(void *arg){
         return 0;
     }
 
+    printf("\tLeyendo el archivo.\n\t-------------------\n\n");
 
     char buffer[1000];//Donde almacena la linea
     char value [1000];//Auxiliar para obtener los valores
@@ -80,12 +133,21 @@ void *leerDatos(void *arg){
         strncpy(value, buffer + indice0, indice1-indice0);
         priority = atoi(value);
 
+        bzero(buffer, 1000);
+        bzero(value, 1000);
+        fflush(NULL);
+
         //Prepara el mensaje
         mensaje[0] = burst+'0';
         mensaje[1] = priority+'0';
 
 
-        //ESPERA DOS SEGUNDOS Y ENVÍA LA INFORMACIÓN
+        //ENVÍA LA INFORMACIÓN
+
+        pthread_t hilo_proceso;
+        pthread_create (&hilo_proceso, NULL, enviarMensaje, (void *) &mensaje);
+        pthread_join (hilo_proceso, NULL );
+
 
         /*//PRUEBA
         printf("Prioridad: %lu. \n", priority);
@@ -98,11 +160,12 @@ void *leerDatos(void *arg){
     
     fclose(archivo);
     return 1;
-
 }
+
 
 int main() {
     char *nombre = "archivo.txt";
+
     
     pthread_t hilo1;
     pthread_create (&hilo1, NULL, leerDatos, (void *) &nombre);
