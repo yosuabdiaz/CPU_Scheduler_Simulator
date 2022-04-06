@@ -1,0 +1,36 @@
+
+1. Cliente manual, struct que se encargue la lectura de un txt.
+
+2. Cliente automatico, struct que crea procesos random y los manda al planificador
+
+3. Planificador de procesos es un struct 
+
+4. Job scheduler es un hilo.
+
+5. CPU scheduler es u hilo.
+
+6. Algoritmos en el CPU scheduler.
+
+7. Implementacion cliente-servidor.  LISTO
+
+8. Mostrar el resumen. 
+
+9. Thread de tiempos.
+
+10. Documentacion
+
+	10.1 Estrategia
+
+	10.2 Analisis de resultados
+
+	10.3 Lecciones aprendidas
+
+	10.4 Casos de prueba 
+
+	10.5 Comparacion java threads vs pthreads
+
+	10.6 Manual de usuario
+
+	10.7 Bitacora LISTO 
+
+	10.8 Fuentes  
