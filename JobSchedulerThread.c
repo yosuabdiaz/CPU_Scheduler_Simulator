@@ -15,19 +15,19 @@ Siempre y cuando haya algo en ready lo va a poner en waiting
 typedef struct JobSchedulerThread{
     pthread_t thread;
     pthread_mutex_t *mutex;
-    //Queue *ready; Otro tipo de cola
-    Queue *waiting;
+    //Queue *mientras; Otro tipo de cola para el string burst,prioridad
+    Queue *readyQueue;
 
 }JobSchedulerThread;
 
-JobSchedulerThread *createJobScheduler(pthread_mutex_t *mutex, Queue *waiting){
+JobSchedulerThread *createJobScheduler(pthread_mutex_t *mutex, Queue *readyQueue){
 
     JobSchedulerThread *job = malloc(sizeof(JobSchedulerThread));
     //Se crea el thread
     pthread_t thread;
     job->thread = thread;
     job->mutex = mutex;
-    job->waiting = waiting;
+    job->readyQueue = readyQueue;
     pthread_create(&thread,NULL,&printThread,"PRUEBA JOB");  //Aqui le paso lo que quiera -- (void*)job
     pthread_join(thread,NULL);
 }
