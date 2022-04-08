@@ -2,19 +2,19 @@
 #include <pthread.h>
 
 
-
 typedef struct Planner {
     JobSchedulerThread *jobSchedulerThread;
     CPUSchedulerThread *cpuSchedulerThread;
     Queue *readyQueue;
-    
-
+    Simple_queue *dataQueue;
 } Planner;
 
 //Constructor 
 Planner * createPlanner(int tipoAlgoritmo){   
     Planner *p = malloc(sizeof(Planner));
     p->readyQueue = createQueue();
+    p->dataQueue = createSimpleQueue();
+
     //Crea un mutex para ser compartido entre el Job y el CPU 
     //Para accesar a la cola del waiting
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -38,11 +38,15 @@ Planner * createPlanner(int tipoAlgoritmo){
 
     //FIN PRUEBAS-----------------------------------------------
 
-    p->jobSchedulerThread = createJobScheduler(&mutex,p->readyQueue);
-    p->cpuSchedulerThread = createCPUScheduler(tipoAlgoritmo,&mutex,p->readyQueue );
+    
+
+
+    //p->jobSchedulerThread = createJobScheduler(&mutex,p->readyQueue);
+    //p->cpuSchedulerThread = createCPUScheduler(tipoAlgoritmo,&mutex,p->readyQueue );
 
     return p;
 }
+
 
 
 

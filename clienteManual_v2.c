@@ -34,7 +34,7 @@ void *enviarMensaje(void *arg){
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(22000);
     //Creo que esta IP cambia para cada maquina donde lo corra, revisar
-    inet_pton(AF_INET, "10.0.2.15", &(servaddr.sin_addr));
+    inet_pton(AF_INET, "192.168.0.10", &(servaddr.sin_addr));
 
     //Espera 2 segundos antes de enviar el mensaje
     usleep (2*MICROSECONDOS);
@@ -42,12 +42,12 @@ void *enviarMensaje(void *arg){
 
     connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));//llama
 
-    printf("Connected to server...\n");
+    //printf("Connected to server...\n");
 
     //bzero(buffer, 1024);
     //strcpy(buffer, "HELLO, PROCESS 01\n");
 
-    printf("Client: %s \n\n", buffer);
+    //printf("Client: %s \n\n", buffer);
     send(sockfd, buffer, strlen(buffer), 0);
 
     
