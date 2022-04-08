@@ -59,10 +59,15 @@ void *revisarReadyQueue(void *data){
                 case 2:
                     SJF(cpu);
                     break;
+                default:
+                    break;
 
             }
-            
         }
+        else{
+            break;
+        }
+        
         //Cuenta el tiempo de ocioso
         
     }
@@ -78,13 +83,14 @@ void FIFO(CPUSchedulerThread *cpu){
 
     //Bloqueo para que solo yo use la cola
     pthread_mutex_lock(cpu->mutex);
+    printf("---------------------------------------------\n");
     //Saco al primero de la cola
     Node *deleted = dequeue (cpu->readyQueue);
     //tomo su burst
     int burst = deleted->process->initialBurst;
 
     //Imprimo el burst para comprobar
-    printf("---------------------------------------------\n");
+    
     printf("PID/llegada: %i\n",deleted->process->pcb->PID);
     printf("Espera segun burst: %i\n",burst);
 
@@ -117,7 +123,6 @@ void SJF(CPUSchedulerThread *cpu){
     printf("Espera segun burst: %i\n",burst);
 
     usleep(burst*1000000); 
-    deleteNode(higherBurst->process,cpu->readyQueue);
     //La salida se la asigno como tiempo del proceso anterior en salir mas mi burst
     higherBurst->process->exit = cpu->lastInTimeLine + burst;
     cpu->lastInTimeLine = cpu->lastInTimeLine + burst;
@@ -127,6 +132,8 @@ void SJF(CPUSchedulerThread *cpu){
 
     //Lo guardo en la cola de terminados
     enqueue (higherBurst->process,cpu->finishedQueue);
+    //Lo quito de la cola de en ready
+    deleteNode(higherBurst->process,cpu->readyQueue);
     //Desloqueo para que solo otro use la cola
     pthread_mutex_unlock(cpu->mutex);
 

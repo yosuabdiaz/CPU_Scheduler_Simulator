@@ -44,6 +44,7 @@ Node *dequeue (Queue *q){
         q->length-=1;
 		return deleted;
     }
+ 
 
 }
 
@@ -52,18 +53,19 @@ Node *deleteNode(Process *p,Queue *q){
     Node* actual = q->first ;
 
     if (actual->process == p){
-        dequeue (q);
+        return dequeue (q);
     }
     else{
         while (actual->next->process != p){ 
             actual = actual->next; 
         }
+        //Nodo que ando buscando
         Node *temp = actual->next;
-        actual->next = actual->next->next;
+        actual->next = temp->next;
         temp->next = NULL;
         printf("Process deleted!\n");
-    }
-    return actual;       
+        return temp; 
+    }       
 
 }
 
