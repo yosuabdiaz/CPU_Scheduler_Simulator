@@ -47,6 +47,40 @@ Node *dequeue (Queue *q){
 
 }
 
+Node *deleteNode(Process *p,Queue *q){
+    //Dado un proceso retorna el nodo en el que se encuentra
+    Node* actual = q->first ;
+
+    if (actual->process == p){
+        dequeue (q);
+    }
+    else{
+        while (actual->next->process != p){ 
+            actual = actual->next; 
+        }
+        Node *temp = actual->next;
+        actual->next = actual->next->next;
+        temp->next = NULL;
+        printf("Process deleted!\n");
+    }
+    return actual;       
+
+}
+
+Node *getHigher(Queue *q){
+
+    if (q->length==0){ return NULL;}
+    Node *temp = q->first;
+    Node *higher = q->first;
+    while(temp!=NULL){
+        if (temp->process->initialBurst > higher->process->initialBurst){
+            higher = temp;
+        }
+        temp = temp->next;
+    }
+    return higher;
+
+}
 
 void printQueue(Queue *q){
 

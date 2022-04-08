@@ -20,6 +20,7 @@ Planner * createPlanner(int tipoAlgoritmo){
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
     //ALGUNOS PROCESOS SE AGREGAN A LA COLA PARA PROBAR-----------------------------
+   
     PCB *pcb1 = createPCB(0,2,1); //PID, prority, state
     Process *process1 = createProcess(3,1,pcb1); //burst, arrival, pcb
     enqueue(process1,p->readyQueue);
@@ -28,14 +29,15 @@ Planner * createPlanner(int tipoAlgoritmo){
     Process *process2 = createProcess(2,2,pcb2); //burst, arrival, pcb
     enqueue(process2,p->readyQueue);
 
+    
     PCB *pcb3 = createPCB(2,1,1); //PID, prority, state
     Process *process3 = createProcess(5,3,pcb3); //burst, arrival, pcb
     enqueue(process3,p->readyQueue);
-
+    
     PCB *pcb4 = createPCB(3,3,1); //PID, prority, state
     Process *process4 = createProcess(4,3,pcb4); //burst, arrival, pcb
     enqueue(process4,p->readyQueue);
-
+    
     //FIN PRUEBAS-----------------------------------------------
 
     p->jobSchedulerThread = createJobScheduler(&mutex,p->readyQueue);

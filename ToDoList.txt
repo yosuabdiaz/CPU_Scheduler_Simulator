@@ -1,11 +1,11 @@
 
-1. Cliente manual, struct que se encargue la lectura de un txt.
+1. Cliente manual, struct que se encargue la lectura de un txt.  LISTO
 
-2. Cliente automatico, struct que crea procesos random y los manda al planificador
+2. Cliente automatico, struct que crea procesos random y los manda al planificador LISTO
 
-3. Planificador de procesos es un struct 
+3. Planificador de procesos es un struct. LISTO
 
-4. Job scheduler es un hilo.
+4. Job scheduler es un hilo. 
 
 5. CPU scheduler es u hilo.
 
