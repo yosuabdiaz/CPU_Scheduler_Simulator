@@ -26,17 +26,11 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-
-
-void *prueba (void *unused){
-
-    printf("hola");
+Simple_queue *dataQueue;
 
 
 
-    return NULL;
 
-}
 
 
 
@@ -49,6 +43,10 @@ void *serverSocket(void *unused){
     struct sockaddr_in servaddr;
 
     char buffer[1024];
+
+    
+
+
 
     
 
@@ -110,7 +108,7 @@ void *serverSocket(void *unused){
 
             
 
-        //insertData(burst, priority, planner);
+        Insert_simple_queue(burst, priority, dataQueue);
 
         
 
@@ -140,6 +138,14 @@ void *CreatePlanner(void *argv){
 
     Planner *planner = createPlanner((int *)argv); // el parametro pasado por consola es el algoritmo que debe usar 
 
+    while (1)
+
+    {
+
+        planner->dataQueue = dataQueue;
+
+    }
+
     
 
     return NULL;
@@ -152,11 +158,13 @@ void main(int argc, char *argv[]){
 
     if (argc > 1){ //contador de parametros
 
+
+
         pthread_t thread1, thread2;
 
         pthread_create(&thread1, NULL, serverSocket, NULL);
 
-
+        dataQueue = createSimpleQueue();
 
         printf("Planner con algoritmo: %s \n ", argv[1]);
 
@@ -177,3 +185,4 @@ void main(int argc, char *argv[]){
     }
 
 }
+
