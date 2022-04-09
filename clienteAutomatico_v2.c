@@ -35,6 +35,8 @@ void *enviarMensaje(void *arg){
     char *buffer;
     buffer = (char *)arg;
 
+    char buffer_Aux[1024];
+
 
     //Crea el socket para llamar al servidor
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -44,7 +46,7 @@ void *enviarMensaje(void *arg){
     servaddr.sin_port = htons(22000);
 
     //La IP cambia para cada maquina donde lo corra
-    inet_pton(AF_INET, "192.168.0.10", &(servaddr.sin_addr));
+    inet_pton(AF_INET, "10.0.2.15", &(servaddr.sin_addr));
 
     //Espera 2 segundos antes de enviar el mensaje
     usleep (2*MICROSECONDOS);
@@ -57,18 +59,21 @@ void *enviarMensaje(void *arg){
     //bzero(buffer, 1024);
     //strcpy(buffer, "HELLO, PROCESS 01\n");
 
-    //printf("Client: %s \n\n", buffer);
+    printf("Client: %s \n\n", buffer);
     send(sockfd, buffer, strlen(buffer), 0);
 
     
 
-    bzero(buffer, 1024);
-    recv(sockfd, buffer, sizeof(buffer),0);
+    bzero(buffer_Aux, 1024);
+    recv(sockfd, buffer_Aux, sizeof(buffer_Aux),0);
 
-    //printf("Server: %s \n", buffer);
+    //printf("Server: %s \n", buffer_Aux);
 
     close(sockfd);
-    //printf("Server Closed\n");
+    //bzero(buffer, 1024);
+    //printf("\tEnvió el mensaje\n\t............\n");
+
+    return;
 
 }
 
@@ -81,7 +86,8 @@ void *generarDatos(void *arg){
     unsigned priority;
 
     unsigned espera;
-    char mensaje[2];   
+    char mensaje[2];
+    pthread_t hilo_proceso2;   
 
     //Usar un flag para detenerlo.
     while(priority<5){//De momento usa esa condición para hacer las pruebas
@@ -95,31 +101,27 @@ void *generarDatos(void *arg){
         priority = random() % (MAXPRIORITY-MINPRIORITY+1) + MINPRIORITY; 
 
         //Los convierte en un string
-        bzero(mensaje, 1000);
+        bzero(mensaje, 2);
         fflush(NULL);
         
         mensaje[0] = burst+'0';
         mensaje[1] = priority+'0';
-
-         
-
         
 
-        //ENVÍA LA INFORMACIÓN
-        
-        pthread_t hilo_proceso2;
+        //ENVÍA LA INFORMACIÓN        
         pthread_create (&hilo_proceso2, NULL, enviarMensaje, (void *) &mensaje);
-        pthread_join (hilo_proceso2, NULL );
 
         /*//PRUEBA
-        printf("Prioridad: %u. \n", priority);
-        printf("Burst: %u. \n", burst);
+        printf("Prioridad: %u. ", priority);
+        printf("Burst: %u. ", burst);
         printf("Mensaje: %s. \n", mensaje);
         printf("-------------------------\n");
         //*/
 
             
     }
+    pthread_join (hilo_proceso2, NULL );
+    return;
 }
 
 

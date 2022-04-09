@@ -26,6 +26,8 @@ void *enviarMensaje(void *arg){
     char *buffer;
     buffer = (char *)arg;
 
+    char buffer_Aux[1024];
+
 
     //Crea el socket para llamar al servidor
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -33,8 +35,9 @@ void *enviarMensaje(void *arg){
 
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(22000);
-    //Creo que esta IP cambia para cada maquina donde lo corra, revisar
-    inet_pton(AF_INET, "192.168.0.10", &(servaddr.sin_addr));
+
+    //La IP cambia para cada maquina donde lo corra
+    inet_pton(AF_INET, "10.0.2.15", &(servaddr.sin_addr));
 
     //Espera 2 segundos antes de enviar el mensaje
     usleep (2*MICROSECONDOS);
@@ -47,18 +50,21 @@ void *enviarMensaje(void *arg){
     //bzero(buffer, 1024);
     //strcpy(buffer, "HELLO, PROCESS 01\n");
 
-    //printf("Client: %s \n\n", buffer);
+    printf("Client: %s \n\n", buffer);
     send(sockfd, buffer, strlen(buffer), 0);
 
     
+    //Usa otra variable para los mensajes recibidos porque afectaba la lectura de datos
+    bzero(buffer_Aux, 1024);
+    recv(sockfd, buffer_Aux, sizeof(buffer_Aux),0);
 
-    bzero(buffer, 1024);
-    recv(sockfd, buffer, sizeof(buffer),0);
-
-    //printf("Server: %s \n", buffer);
+    //printf("Server: %s \n", buffer_Aux);
 
     close(sockfd);
-    //printf("Server Closed\n");
+    //bzero(buffer, 1024);
+    //printf("\tEnvió el mensaje\n\t............\n");
+
+    return;
 
 }
 
@@ -90,14 +96,15 @@ void *leerDatos(void *arg){
 
     printf("\tLeyendo el archivo.\n\t-------------------\n\n");
 
-    char buffer[1000];//Donde almacena la linea
+    char linea[1000];//Donde almacena la linea
     char value [1000];//Auxiliar para obtener los valores
+    pthread_t hilo_proceso;
     
-    while(fgets(buffer, 999, archivo)){
+    while(fgets(linea, 999, archivo)){
 
 
         //Obtiene el puntero de la dirección a ese caracter 
-        posiblePuntero = strstr(buffer, ",");
+        posiblePuntero = strstr(linea, ",");
         
         if(!posiblePuntero) {
             printf(stderr, "No coincide el formato del contenido del archivo.\n");
@@ -110,70 +117,62 @@ void *leerDatos(void *arg){
         usleep (espera*MICROSECONDOS);
 
         //Obtiene el indice obtener el primer valor
-        indice0 = posiblePuntero - buffer;
+        indice0 = posiblePuntero - linea;
 
         //Obtiene el burst
-        strncpy(value, buffer + 0, indice0);
+        strncpy(value, linea + 0, indice0);
         burst = atoi(value);
 
         
         //Obtiene el puntero de la dirección a ese caracter 
-        posiblePuntero = strstr(buffer, "\n");
+        posiblePuntero = strstr(linea, "\n");
         
         if(!posiblePuntero) {
-            printf(stderr, "No coincide el formato del contenido del archivo.\n");
+            printf("\n\nERROR: No coincide el formato del contenido del archivo: %s\n\n",linea);
             return 0;
         }
 
         //Obtiene el indice obtener el segundo valor
-        indice1 = posiblePuntero - buffer;
+        indice1 = posiblePuntero - linea;
         
         //Obtiene la prioridad
         indice0++; 
-        strncpy(value, buffer + indice0, indice1-indice0);
+        strncpy(value, linea + indice0, indice1-indice0);
         priority = atoi(value);
 
-        bzero(buffer, 1000);
+        bzero(linea, 1000);
         bzero(value, 1000);
         fflush(NULL);
-
         //Prepara el mensaje
         mensaje[0] = burst+'0';
         mensaje[1] = priority+'0';
 
 
-        //ENVÍA LA INFORMACIÓN
-
-        pthread_t hilo_proceso;
+        //ENVÍA LA INFORMACIÓN       
         pthread_create (&hilo_proceso, NULL, enviarMensaje, (void *) &mensaje);
-        pthread_join (hilo_proceso, NULL );
-
 
         /*//PRUEBA
-        printf("Prioridad: %lu. \n", priority);
-        printf("Burst: %lu. \n", burst);
-        printf("Espera: %lu. \n", espera);
-
+        printf("Prioridad: %u. ", priority);
+        printf("Burst: %u. ", burst);
+        printf("Espera: %u. \n", espera);
         printf("-------------------------\n");
         //*/
-    }
-    
+    }    
     fclose(archivo);
-    return 1;
+    
+    pthread_join (hilo_proceso, NULL );//Espera a que se envié el último mensaje
+    return 0;
 }
 
 
 int main() {
     char *nombre = "archivo.txt";
-
     
     pthread_t hilo1;
-    pthread_create (&hilo1, NULL, leerDatos, (void *) &nombre);
+    pthread_create (&hilo1, NULL, leerDatos, (void *)nombre);
     
-    pthread_join (hilo1, NULL );
+    pthread_join(hilo1, NULL);
 
-
-    leerDatos(nombre);
     return 0;
 
 }
