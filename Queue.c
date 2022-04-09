@@ -63,24 +63,43 @@ Node *deleteNode(Process *p,Queue *q){
         Node *temp = actual->next;
         actual->next = temp->next;
         temp->next = NULL;
+        q->length-=1;
         printf("Process deleted!\n");
         return temp; 
     }       
 
 }
 
-Node *getHigher(Queue *q){
+
+Node *getBetterPriority(Queue *q){
 
     if (q->length==0){ return NULL;}
     Node *temp = q->first;
-    Node *higher = q->first;
+    Node *betterPriotity = q->first;
     while(temp!=NULL){
-        if (temp->process->initialBurst > higher->process->initialBurst){
-            higher = temp;
+        if (temp->process->pcb->priority < betterPriotity->process->pcb->priority){
+            betterPriotity = temp;
         }
         temp = temp->next;
     }
-    return higher;
+    return betterPriotity;
+
+}
+
+
+
+Node *getShortest(Queue *q){
+
+    if (q->length==0){ return NULL;}
+    Node *temp = q->first;
+    Node *shortest = q->first;
+    while(temp!=NULL){
+        if (temp->process->initialBurst < shortest->process->initialBurst){
+            shortest = temp;
+        }
+        temp = temp->next;
+    }
+    return shortest;
 
 }
 
@@ -90,7 +109,7 @@ void printQueue(Queue *q){
 
     while(temp!=NULL){
         //Imprime el burst para probar
-        printf("Initial Burst: %i \n",temp->process->initialBurst);
+        printf("PID: %i \n",temp->process->pcb->PID);
         //Avanza al siguiente nodo
         temp = temp->next;
     }
