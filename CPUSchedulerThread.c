@@ -18,12 +18,13 @@ typedef struct CPUSchedulerThread{
     int tipoAlgoritmo;
     int quantum;
     int lastInTimeLine;
+    long int time;
     //Me indica en cual segundo habia quedado el ultimo proceso que se ejecuto
     //o sea, por donde va el timeline.
 
 }CPUSchedulerThread;
 
-CPUSchedulerThread *createCPUScheduler(int tipoAlgoritmo,int quantum,pthread_mutex_t *mutex,Queue *readyQueue){
+CPUSchedulerThread *createCPUScheduler(long int time,int tipoAlgoritmo,int quantum,pthread_mutex_t *mutex,Queue *readyQueue){
 
     CPUSchedulerThread *cpu = malloc(sizeof(CPUSchedulerThread));
     //Se crea el thread
@@ -35,6 +36,7 @@ CPUSchedulerThread *createCPUScheduler(int tipoAlgoritmo,int quantum,pthread_mut
     cpu->tipoAlgoritmo = tipoAlgoritmo;
     cpu->quantum = quantum;
     cpu->lastInTimeLine = 0;
+    cpu->time = time;
     pthread_create(&thread,NULL,&revisarReadyQueue,(void*)cpu);
     return cpu;
 }
@@ -76,12 +78,8 @@ void *revisarReadyQueue(void *data){
         else{
             break;
         }
-        
-        //Cuenta el tiempo de ocioso
-        
+        //Cuenta el tiempo de ocioso   
     }
-    
-    
     
     
 }
@@ -107,12 +105,12 @@ void FIFO(CPUSchedulerThread *cpu){
 
     //Espero cantidad de segundos segun burst
     usleep(burst*1000000); 
-    //La salida se la asigno como tiempo del proceso anterior en salir mas mi burst
-    deleted->process->exit = cpu->lastInTimeLine + burst;
-    cpu->lastInTimeLine = cpu->lastInTimeLine + burst;
+    //La salida se la asigno con clock
+    int exit = clock()/CLOCKS_PER_SEC-cpu->time;
+    deleted->process->exit = exit+1;
 
     //Imprimo la salida para comprobar
-    printf("Salida: %i\n",deleted->process->exit);
+    printf("Salida: %i\n",exit+1);
 
     //Lo guardo en la cola de terminados
     enqueue (deleted->process,cpu->finishedQueue);
@@ -126,7 +124,7 @@ void FIFO(CPUSchedulerThread *cpu){
 void SJF(CPUSchedulerThread *cpu){
 
     //Bloqueo para que solo yo use la cola
-    pthread_mutex_lock(cpu->mutex);
+    //pthread_mutex_lock(cpu->mutex);
     Node *shortestBurst = getShortest(cpu->readyQueue);
     int burst = shortestBurst->process->initialBurst;
 
@@ -134,13 +132,12 @@ void SJF(CPUSchedulerThread *cpu){
     printf("PID/llegada: %i\n",shortestBurst->process->pcb->PID);
     printf("Espera segun menor burst: %i\n",burst);
 
-    usleep(burst*1000000); 
-    //La salida se la asigno como tiempo del proceso anterior en salir mas mi burst
-    shortestBurst->process->exit = cpu->lastInTimeLine + burst;
-    cpu->lastInTimeLine = cpu->lastInTimeLine + burst;
+    usleep(burst*1000000);
+    int exit = (clock()/CLOCKS_PER_SEC-cpu->time);
+    shortestBurst->process->exit = exit+1;
 
     //Imprimo la salida para comprobar
-    printf("Salida: %i\n",shortestBurst->process->exit);
+    printf("Salida: %i\n",exit+1);
 
     //Lo guardo en la cola de terminados
     enqueue (shortestBurst->process,cpu->finishedQueue);
@@ -167,12 +164,13 @@ void HPF(CPUSchedulerThread *cpu){
     printf("Espera segun burst: %i\n",burst);
 
     usleep(burst*1000000); 
-    //La salida se la asigno como tiempo del proceso anterior en salir mas mi burst
-    betterPriotity->process->exit = cpu->lastInTimeLine + burst;
-    cpu->lastInTimeLine = cpu->lastInTimeLine + burst;
+    //La salida se la asigno con clock
+    int exit = (clock()/CLOCKS_PER_SEC-cpu->time);
+    betterPriotity->process->exit = exit+1;
+
 
     //Imprimo la salida para comprobar
-    printf("Salida: %i\n",betterPriotity->process->exit);
+    printf("Salida: %i\n",exit+1);
 
     //Lo guardo en la cola de terminados
     enqueue (betterPriotity->process,cpu->finishedQueue);
@@ -208,12 +206,12 @@ void RR(CPUSchedulerThread *cpu){
         //Espero cantidad de segundos segun quantum
         usleep(quantum*1000000); 
 
-        //La salida se la asigno como tiempo del proceso anterior en salir mas mi burst
-        deleted->process->exit = cpu->lastInTimeLine + quantum;
-        cpu->lastInTimeLine = cpu->lastInTimeLine + quantum;
+        //La salida se la asigno con clock
+        int exit = (clock()/CLOCKS_PER_SEC-cpu->time);
+        deleted->process->exit = cpu->lastInTimeLine + exit + 1;
 
         //Imprimo la salida para comprobar
-        printf("Salida: %i\n",deleted->process->exit);
+        printf("Salida: %i\n",exit+1);
         //Lo guardo en la cola de ready para que espere a ejecutarse por otro quantum
         enqueue (deleted->process,cpu->readyQueue);
     }
@@ -226,12 +224,12 @@ void RR(CPUSchedulerThread *cpu){
         //Espero cantidad de segundos segun burst
         usleep(burst*1000000); 
 
-        //La salida se la asigno como tiempo del proceso anterior en salir mas mi burst
-        deleted->process->exit = cpu->lastInTimeLine + burst;
-        cpu->lastInTimeLine = cpu->lastInTimeLine + burst;
+        //La salida se la asigno con clock
+        int exit = (clock()/CLOCKS_PER_SEC-cpu->time);
+        deleted->process->exit = cpu->lastInTimeLine + exit + 1;
 
         //Imprimo la salida para comprobar
-        printf("Salida: %i\n",deleted->process->exit);
+        printf("Salida: %i\n",exit+1);
         //Lo guardo en la cola de terminados
         enqueue (deleted->process,cpu->finishedQueue);
     }

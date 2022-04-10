@@ -18,16 +18,30 @@ int main(void){
     printf("%ld", time(NULL));
     */
 
-    Planner *planner = createPlanner(4,4);     //Tipo es RR con Q=4
+    Planner *planner = createPlanner(4,4);    
     //Prueba para meter datos de procesos al planer
 
+    insertData(3,2,planner); //Burst,priority
+    //usleep(2000000); 
+    insertData(5,1,planner);    
+    //usleep(1000000); 
+    insertData(2,2,planner); 
+    //usleep(1000000);  
+    insertData(1,1,planner); 
+   // usleep(1000000); 
+    insertData(3,3,planner);
+    //usleep(1000000);  
+    insertData(3,5,planner);
 
 
-    insertData(3, 2, planner); //Burst,priority
-    usleep(3*1000000); 
-    insertData(5, 1, planner);
-  
    
+    
+    //FIN PRUEBAS-----------------------------------------------
+    usleep(30*1000000); 
+    printf("PRINT QUEUE ANTES\n");
+    printQueue(planner->cpuSchedulerThread->finishedQueue);
+    printf("PRINT QUEUE DESPUES\n");
+    
     while(1){}
     return 0;
 }

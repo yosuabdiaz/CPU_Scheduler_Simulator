@@ -51,7 +51,9 @@ void *revisarSimpleQueue(void *data){
             PCB *pcb = createPCB(job->PIDCounter,node->priority,1); //PID, prority, state
             job->PIDCounter = job->PIDCounter+1;
             //arrival hay que ponerselo segun el time
-            Process *process = createProcess(node->burst,1,pcb); //burst, arrival, pcb
+            int arrival = (clock()/CLOCKS_PER_SEC-job->time);
+            Process *process = createProcess(node->burst,arrival,pcb); //burst, arrival, pcb
+            printf("Arrival: %i\n",arrival);
 
             //pthread_mutex_lock(job->mutex);
             enqueue(process,job->readyQueue);

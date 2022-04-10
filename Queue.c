@@ -104,12 +104,14 @@ Node *getShortest(Queue *q){
 }
 
 void printQueue(Queue *q){
-
     Node *temp = q->first;
 
     while(temp!=NULL){
         //Imprime el burst para probar
-        printf("PID: %i \n",temp->process->pcb->PID);
+        printf("-----------------------------------------------------\n");
+        printf("PID: %i Priority: %i \n",temp->process->pcb->PID,temp->process->pcb->priority);
+        printf("Burst: %i Arrival: %i Exit: %i\n",temp->process->initialBurst,temp->process->arrival,temp->process->exit);
+        printf("-----------------------------------------------------\n");
         //Avanza al siguiente nodo
         temp = temp->next;
     }
