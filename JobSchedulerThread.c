@@ -33,18 +33,19 @@ JobSchedulerThread *createJobScheduler(long int time, pthread_mutex_t *mutex, Qu
     job->PIDCounter = 0;
     job->time = time;
     job->dataQueue = createSimpleQueue();
-    pthread_create(&thread,NULL,&revisarSimpleQueue,(void*)job);  
-    pthread_join(thread, NULL);
+    pthread_create(&thread,NULL,&revisarSimpleQueue,(void*)job); 
+    
     return job;
 }
 
 
 void *revisarSimpleQueue(void *data){
-    /*
+    
     JobSchedulerThread *job = ((JobSchedulerThread*)data);
     while(1){
         //Mientras haya algo en la cola del dataQueue
         if (job->dataQueue->length>0){
+            printf("--------------------CPU-------------------------\n");
             SimpleNode *node = dequeueSimple(job->dataQueue);
 
             PCB *pcb = createPCB(job->PIDCounter,node->priority,1); //PID, prority, state
@@ -52,20 +53,17 @@ void *revisarSimpleQueue(void *data){
             //arrival hay que ponerselo segun el time
             Process *process = createProcess(node->burst,1,pcb); //burst, arrival, pcb
 
-            pthread_mutex_lock(job->mutex);
+            //pthread_mutex_lock(job->mutex);
             enqueue(process,job->readyQueue);
-            pthread_mutex_unlock(job->mutex);
+            //pthread_mutex_unlock(job->mutex);
+            
 
         }
         
     }
-    */
-  
     
-    for(int i = 0; i<= 1; i++){
-        usleep(5*100000);
-        printf("JOB SCHEDULER\n");
-    }
+  
+   
 
     
 }

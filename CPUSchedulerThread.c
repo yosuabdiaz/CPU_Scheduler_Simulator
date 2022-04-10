@@ -36,7 +36,6 @@ CPUSchedulerThread *createCPUScheduler(int tipoAlgoritmo,int quantum,pthread_mut
     cpu->quantum = quantum;
     cpu->lastInTimeLine = 0;
     pthread_create(&thread,NULL,&revisarReadyQueue,(void*)cpu);
-    pthread_join(thread, NULL);
     return cpu;
 }
 
@@ -47,8 +46,9 @@ void HPF(CPUSchedulerThread *cpu);
 void RR(CPUSchedulerThread *cpu);
 
 
+
 void *revisarReadyQueue(void *data){
-    /*
+    
     CPUSchedulerThread *cpu = ((CPUSchedulerThread*)data);
     
     while(1){
@@ -80,12 +80,8 @@ void *revisarReadyQueue(void *data){
         //Cuenta el tiempo de ocioso
         
     }
-    */
-    for(int i = 0; i<= 5; i++){
-        usleep(5*100000);
-        printf("cpu SCHEDULER\n");
-
-    }
+    
+    
     
     
 }
@@ -97,8 +93,8 @@ No contempla continuar en la linea despues del ocio del CPU
 void FIFO(CPUSchedulerThread *cpu){
 
     //Bloqueo para que solo yo use la cola
-    pthread_mutex_lock(cpu->mutex);
-    printf("---------------------------------------------\n");
+    //pthread_mutex_lock(cpu->mutex);
+    printf("--------------------JOB-------------------------\n");
     //Saco al primero de la cola
     Node *deleted = dequeue (cpu->readyQueue);
     //tomo su burst
@@ -121,7 +117,8 @@ void FIFO(CPUSchedulerThread *cpu){
     //Lo guardo en la cola de terminados
     enqueue (deleted->process,cpu->finishedQueue);
     //Desloqueo para que solo otro use la cola
-    pthread_mutex_unlock(cpu->mutex);
+    //pthread_mutex_unlock(cpu->mutex);
+    
 }
 
 
@@ -133,7 +130,7 @@ void SJF(CPUSchedulerThread *cpu){
     Node *shortestBurst = getShortest(cpu->readyQueue);
     int burst = shortestBurst->process->initialBurst;
 
-    printf("---------------------------------------------\n");
+    printf("--------------------JOB-------------------------\n");
     printf("PID/llegada: %i\n",shortestBurst->process->pcb->PID);
     printf("Espera segun menor burst: %i\n",burst);
 
@@ -150,7 +147,8 @@ void SJF(CPUSchedulerThread *cpu){
     //Lo quito de la cola de en ready
     deleteNode(shortestBurst->process,cpu->readyQueue);
     //Desloqueo para que solo otro use la cola
-    pthread_mutex_unlock(cpu->mutex);
+    //pthread_mutex_unlock(cpu->mutex);
+
 
 
 }
@@ -159,11 +157,11 @@ void SJF(CPUSchedulerThread *cpu){
 void HPF(CPUSchedulerThread *cpu){
 
     //Bloqueo para que solo yo use la cola
-    pthread_mutex_lock(cpu->mutex);
+    //pthread_mutex_lock(cpu->mutex);
     Node *betterPriotity = getBetterPriority(cpu->readyQueue);
     int burst = betterPriotity->process->initialBurst;
 
-    printf("---------------------------------------------\n");
+    printf("--------------------JOB-------------------------\n");
     printf("PID/llegada: %i\n",betterPriotity->process->pcb->PID);
     printf("Priority: %i\n",betterPriotity->process->pcb->priority);
     printf("Espera segun burst: %i\n",burst);
@@ -181,15 +179,17 @@ void HPF(CPUSchedulerThread *cpu){
     //Lo quito de la cola de en ready
     deleteNode(betterPriotity->process,cpu->readyQueue);
     //Desloqueo para que solo otro use la cola
-    pthread_mutex_unlock(cpu->mutex);
+    //pthread_mutex_unlock(cpu->mutex);
+
 
 }
 
 
 void RR(CPUSchedulerThread *cpu){
+    
     //Bloqueo para que solo yo use la cola
-    pthread_mutex_lock(cpu->mutex);
-    printf("---------------------------------------------\n");
+    //pthread_mutex_lock(cpu->mutex);
+    printf("--------------------JOB-------------------------\n");
     //Saco al primero de la cola
     Node *deleted = dequeue (cpu->readyQueue);
     //tomo su burst
@@ -236,6 +236,7 @@ void RR(CPUSchedulerThread *cpu){
         enqueue (deleted->process,cpu->finishedQueue);
     }
     //Desloqueo para que solo otro use la cola
-    pthread_mutex_unlock(cpu->mutex);
+    //pthread_mutex_unlock(cpu->mutex);
+
 
 }

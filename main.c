@@ -23,22 +23,11 @@ int main(void){
 
 
 
-    insertData(3, 2, planner);
+    insertData(3, 2, planner); //Burst,priority
     usleep(3*1000000); 
-    printf("Inserted");
-    /*insertData(5, 1, planner);
-    usleep(3*1000000); 
-    printf("Inserted");
-    insertData(6, 1, planner);
-    usleep(4*1000000); 
-    printf("Inserted");
-    insertData(8, 5, planner);
-    usleep(5*1000000); 
-    printf("Inserted");
-    insertData(1, 3, planner);
-    usleep(2*1000000); 
-    printf("Inserted");*/
+    insertData(5, 1, planner);
+  
    
-
+    while(1){}
     return 0;
 }

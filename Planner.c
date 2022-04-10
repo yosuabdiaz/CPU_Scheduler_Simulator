@@ -18,6 +18,7 @@ typedef struct Planner {
 //Constructor 
 Planner * createPlanner(int tipoAlgoritmo, int quantum){   
     Planner *p = malloc(sizeof(Planner));
+    pthread_t hilo;
     p->readyQueue = createQueue();
     p->time = clock();
 
@@ -25,7 +26,7 @@ Planner * createPlanner(int tipoAlgoritmo, int quantum){
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     printf("Ojala me muera ya \n");
     //----------------------------------------------------------------
-    /*
+    
     PCB *pcb1 = createPCB(0,2,1); //PID, prority, state
     Process *process1 = createProcess(3,1,pcb1); //burst, arrival, pcb
     enqueue(process1,p->readyQueue);
@@ -41,21 +42,22 @@ Planner * createPlanner(int tipoAlgoritmo, int quantum){
     PCB *pcb4 = createPCB(3,3,1); //PID, prority, state
     Process *process4 = createProcess(4,3,pcb4); //burst, arrival, pcb
     enqueue(process4,p->readyQueue);
-    */
+    
     //FIN PRUEBAS-----------------------------------------------
 
 
     p->jobSchedulerThread = createJobScheduler(p->time,&mutex,p->readyQueue);
-    //p->cpuSchedulerThread = createCPUScheduler(tipoAlgoritmo,quantum,&mutex,p->readyQueue);
+    p->cpuSchedulerThread = createCPUScheduler(tipoAlgoritmo,quantum,&mutex,p->readyQueue);
+    
 
     return p;
 
 }
 
 void insertData(int burst, int priority, Planner *p){
-    //Insert_simple_queue(burst, priority, p->jobSchedulerThread->dataQueue);
-    //printf("Inserted: %i %i \n",burst, priority);
-    printf("Ojala me muera ya \n");
+    Insert_simple_queue(burst, priority, p->jobSchedulerThread->dataQueue);
+    printf("Inserted: %i %i \n",burst, priority);
+
 }
 
 
