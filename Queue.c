@@ -117,3 +117,44 @@ void printQueue(Queue *q){
     }
 
 }
+
+void printTable(Queue *q){
+    Node *temp = q->first;
+    printf("PID     TAT     WT\n");
+    while(temp!=NULL){
+        //Imprime el burst para probar
+        printf("-------------------------------------\n");
+        int TAT = temp->process->exit - temp->process->arrival;
+        int WT = TAT - temp->process->initialBurst;
+        printf("%i      %i      %i\n",temp->process->pcb->PID,TAT,WT);
+        //Avanza al siguiente nodo
+        temp = temp->next;
+    }
+
+}
+
+void meanTAT(Queue *q){
+    Node *temp = q->first;
+    int mean = 0;
+    printf("-------------------------------------\n");
+    while(temp!=NULL){
+        int TAT = temp->process->exit - temp->process->arrival;
+        mean = mean + TAT;
+        temp = temp->next;
+    }
+    printf("Mean TAT %i\n",mean/q->length);
+
+}
+
+void meanWT(Queue *q){
+    Node *temp = q->first;
+    int mean = 0;
+    printf("-------------------------------------\n");
+    while(temp!=NULL){
+        int TAT = temp->process->exit - temp->process->arrival;
+        int WT = TAT - temp->process->initialBurst;
+        mean = mean + WT;
+        temp = temp->next;
+    }
+    printf("Mean WT %i\n",mean/q->length);
+}

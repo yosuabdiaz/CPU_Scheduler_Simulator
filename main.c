@@ -5,6 +5,7 @@
 #include <time.h> 
 
 
+
 int main(void){
     
     //EJEMPLO DE TIMER 
@@ -37,10 +38,13 @@ int main(void){
    
     
     //FIN PRUEBAS-----------------------------------------------
-    usleep(30*1000000); 
+    usleep(45*1000000); 
     printf("PRINT QUEUE ANTES\n");
     printQueue(planner->cpuSchedulerThread->finishedQueue);
     printf("PRINT QUEUE DESPUES\n");
+    printTable(planner->cpuSchedulerThread->finishedQueue);
+    meanTAT(planner->cpuSchedulerThread->finishedQueue);
+    meanWT(planner->cpuSchedulerThread->finishedQueue);
     
     while(1){}
     return 0;

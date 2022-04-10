@@ -46,6 +46,7 @@ void FIFO(CPUSchedulerThread *cpu);
 void SJF(CPUSchedulerThread *cpu);
 void HPF(CPUSchedulerThread *cpu);
 void RR(CPUSchedulerThread *cpu);
+void tables(CPUSchedulerThread *cpu);
 
 
 
@@ -83,6 +84,13 @@ void *revisarReadyQueue(void *data){
     
     
 }
+
+/*
+void tables(CPUSchedulerThread *cpu){
+
+
+}
+*/
 
 /*
 Esto lo hace bien si fuera un ejecicio como en clase y siempre el primero proceso entra en el segundo 0
@@ -231,7 +239,7 @@ void RR(CPUSchedulerThread *cpu){
         //Imprimo la salida para comprobar
         printf("Salida: %i\n",exit+1);
         //Lo guardo en la cola de terminados
-        enqueue (deleted->process,cpu->finishedQueue);
+        enqueue (deleted->process,cpu->finishedQueue);  
     }
     //Desloqueo para que solo otro use la cola
     //pthread_mutex_unlock(cpu->mutex);
