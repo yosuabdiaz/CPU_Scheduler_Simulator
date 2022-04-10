@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h> 
 
-void *printThread(void *data);
-
+void *revisarSimpleQueue(void *data);
 //void showReady(JobSchedulerThread *job);
 
 
@@ -15,12 +15,14 @@ Siempre y cuando haya algo en ready lo va a poner en waiting
 typedef struct JobSchedulerThread{
     pthread_t thread;
     pthread_mutex_t *mutex;
-    //Queue *mientras; Otro tipo de cola para el string burst,prioridad
+    Simple_queue *dataQueue;
     Queue *readyQueue;
+    int PIDCounter;
+    long int time;
 
 }JobSchedulerThread;
 
-JobSchedulerThread *createJobScheduler(pthread_mutex_t *mutex, Queue *readyQueue){
+JobSchedulerThread *createJobScheduler(long int time, pthread_mutex_t *mutex, Queue *readyQueue){
 
     JobSchedulerThread *job = malloc(sizeof(JobSchedulerThread));
     //Se crea el thread
@@ -28,17 +30,42 @@ JobSchedulerThread *createJobScheduler(pthread_mutex_t *mutex, Queue *readyQueue
     job->thread = thread;
     job->mutex = mutex;
     job->readyQueue = readyQueue;
-    pthread_create(&thread,NULL,&printThread,"PRUEBA JOB");  //Aqui le paso lo que quiera -- (void*)job
-    pthread_join(thread,NULL);
+    job->PIDCounter = 0;
+    job->time = time;
+    job->dataQueue = createSimpleQueue();
+    pthread_create(&thread,NULL,&revisarSimpleQueue,(void*)job);  
+    pthread_join(thread, NULL);
+    return job;
 }
 
-void *printThread(void *data){
-    //Aqui lo que haga el hilo
-    //int hi = ((JobSchedulerThread*)data)->hola;
-    //aqui while true pasa al waiting los procesos 
-    for (int i = 0; i < 1; i++ ){
-        printf("%s\n",(char*)data);
+
+void *revisarSimpleQueue(void *data){
+    /*
+    JobSchedulerThread *job = ((JobSchedulerThread*)data);
+    while(1){
+        //Mientras haya algo en la cola del dataQueue
+        if (job->dataQueue->length>0){
+            SimpleNode *node = dequeueSimple(job->dataQueue);
+
+            PCB *pcb = createPCB(job->PIDCounter,node->priority,1); //PID, prority, state
+            job->PIDCounter = job->PIDCounter+1;
+            //arrival hay que ponerselo segun el time
+            Process *process = createProcess(node->burst,1,pcb); //burst, arrival, pcb
+
+            pthread_mutex_lock(job->mutex);
+            enqueue(process,job->readyQueue);
+            pthread_mutex_unlock(job->mutex);
+
+        }
+        
     }
-   
+    */
+  
+    
+    for(int i = 0; i<= 1; i++){
+        usleep(5*100000);
+        printf("JOB SCHEDULER\n");
+    }
+
     
 }

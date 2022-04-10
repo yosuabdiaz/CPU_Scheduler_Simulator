@@ -36,7 +36,8 @@ CPUSchedulerThread *createCPUScheduler(int tipoAlgoritmo,int quantum,pthread_mut
     cpu->quantum = quantum;
     cpu->lastInTimeLine = 0;
     pthread_create(&thread,NULL,&revisarReadyQueue,(void*)cpu);
-    pthread_join(thread,NULL);
+    pthread_join(thread, NULL);
+    return cpu;
 }
 
 //Declaracion de funciones 
@@ -47,8 +48,8 @@ void RR(CPUSchedulerThread *cpu);
 
 
 void *revisarReadyQueue(void *data){
+    /*
     CPUSchedulerThread *cpu = ((CPUSchedulerThread*)data);
-    
     
     while(1){
         //Mientras haya algo en la cola del ready
@@ -78,6 +79,12 @@ void *revisarReadyQueue(void *data){
         
         //Cuenta el tiempo de ocioso
         
+    }
+    */
+    for(int i = 0; i<= 5; i++){
+        usleep(5*100000);
+        printf("cpu SCHEDULER\n");
+
     }
     
     
