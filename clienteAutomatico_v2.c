@@ -28,6 +28,63 @@ struct parametros {
 int flag = 1;
 
 
+void *server(){
+
+    int listen_fd, comm_fd;
+
+    struct sockaddr_in servaddr;
+
+    char mensaje[1024];
+    char respuesta[1024];
+
+    //abrimos el socket
+    listen_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    //se llena el socket con ceros 
+    bzero(&servaddr, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET; //conexion con otros navegadores
+
+    servaddr.sin_addr.s_addr = htons(INADDR_ANY); //abierto a cualquier cliente
+
+    servaddr.sin_port = htons(22500);//puerto 22500 especial para los clientes.
+
+    bind(listen_fd, (struct sockaddr*)&servaddr, sizeof(servaddr)); //atender al servicio
+
+    listen(listen_fd, 10);//socket y lista de espera de clientes
+
+
+    while (flag){
+
+        comm_fd = accept(listen_fd, (struct sockaddr*) NULL, NULL); //acepta la llamada
+
+        //Prepara el buffer para recibir la informacion
+        bzero(mensaje, 1024);
+        recv(comm_fd, mensaje, sizeof(mensaje), 0);
+        //printf("\nMensaje: %s",mensaje);
+
+
+        if ( strstr(mensaje,"STOP") ){
+            flag = 0;
+            //Responde al cliente que le mando el mensaje
+            bzero(respuesta, 1024);
+            strcpy(respuesta, "\n\tCliente automatico detenido.\n");
+
+            send(comm_fd, respuesta, strlen(respuesta), 0);
+        }
+        bzero(mensaje, 1024);
+        bzero(respuesta, 1024);
+
+        //Cierra conexion
+        close(comm_fd);
+    } 
+
+    return NULL;        
+
+}
+
+
+
 void *enviarMensaje(void *arg){
     int sockfd;
     struct sockaddr_in servaddr;
@@ -90,7 +147,7 @@ void *generarDatos(void *arg){
     pthread_t hilo_proceso2;   
 
     //Usar un flag para detenerlo.
-    while(priority<5){//De momento usa esa condición para hacer las pruebas
+    while(flag){//De momento usa esa condición para hacer las pruebas
 
         //ESPERA ENTRE minEspera A maxEspera
         espera = random() % ((prmts->maxEspera) - (prmts->minEspera)+1) + (prmts->minEspera);
@@ -128,16 +185,20 @@ void *generarDatos(void *arg){
 int main() {
     srandom(time(NULL));//Establecer una raíz
 
-    pthread_t hilo1;
+    pthread_t hilo1, hilo2;
 
     T_Parametros prmts;
     
     prmts.minBurst=1; prmts.maxBurst=5;
     prmts.minEspera=3; prmts.maxEspera=8;
 
+    pthread_create (&hilo2, NULL, server, NULL);
     pthread_create (&hilo1, NULL, generarDatos, (void *) &prmts);
     
-    pthread_join (hilo1, NULL ) ;
+    pthread_join (hilo1, NULL);
+    pthread_join (hilo2, NULL);
+
+    printf("\n\tCliente automatico detenido.\n");
 
     return 0;
 

@@ -40,6 +40,12 @@ void insertData(int burst, int priority, Planner *p){
 
 }
 
+void mostrarColaReady(Planner *p){
+    printf("\n\tMostrando Cola del Ready.\n");
+    printQueue(p->cpuSchedulerThread->readyQueue);
+    printf("\n\tCola del Ready Mostrada.\n");
+}
+
 
 
 
