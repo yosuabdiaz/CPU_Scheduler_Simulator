@@ -77,7 +77,7 @@ void *revisarReadyQueue(void *data){
             }
         }
         else{
-            break;
+            
         }
         //Cuenta el tiempo de ocioso   
     }
