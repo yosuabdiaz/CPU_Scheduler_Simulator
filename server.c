@@ -99,7 +99,10 @@ void *CreatePlanner(char *argv[]){
     while (flag)
     {
         if (semaforo == 1){
-            insertData(burst ,priority,planner); //Burst,priority
+            SimpleNode *node = dequeueSimple(dataQueue);
+            insertData(node->burst,node->priority,planner); //Burst,priority
+            printSimpleQueue(dataQueue);
+            //printf("Inserted Planner Create: %i %i \n",node->burst,node->priority);
             semaforo = 0;
         }
         
