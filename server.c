@@ -119,7 +119,7 @@ void *CreatePlanner(char *argv[]){
 
         }else if (flag==4){ //Mostrar cola y parar el server.
             //MUESTRA LAS TABLAS Y DEMÁS DATOS.
-            //AQUÍ VA LAS FUNCIONES...
+            mostrarResumen(planner);
             //PARA LA EJECUCIÓN
             flag=0;
         }

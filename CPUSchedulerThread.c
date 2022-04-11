@@ -77,9 +77,10 @@ void *revisarReadyQueue(void *data){
             }
         }
         else{
-            
+            //usleep(10*1000000);
         }
-        //Cuenta el tiempo de ocioso   
+        //Cuenta el tiempo de ocioso
+           
     }
     
     

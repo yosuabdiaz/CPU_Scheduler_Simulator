@@ -41,9 +41,25 @@ void insertData(int burst, int priority, Planner *p){
 }
 
 void mostrarColaReady(Planner *p){
-    printf("\n\tMostrando Cola del Ready.\n");
+    printf("\n\n\tMostrando Cola del Ready.\n");
     printQueue(p->cpuSchedulerThread->readyQueue);
-    printf("\n\tCola del Ready Mostrada.\n");
+    printf("\n\tCola del Ready Mostrada.\n\n");
+}
+
+void mostrarResumen(Planner *p){
+    printf("\n\n\tMostrando Resumen.\n\t******************\n");
+
+    printf("Candidad de procesos ejecutados: %d\n",p->cpuSchedulerThread->finishedQueue->length);
+
+    printf("\nTabla\tTAT\tWT\n******************\n");
+    printTable(p->cpuSchedulerThread->finishedQueue);
+
+    printf("\nPromedios\tTAT\tWT\n");
+    meanTAT(p->cpuSchedulerThread->finishedQueue);
+    meanWT(p->cpuSchedulerThread->finishedQueue);
+
+    printf("\n\tResumen Mostrado.\n\n");
+
 }
 
 

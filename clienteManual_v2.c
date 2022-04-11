@@ -125,9 +125,6 @@ void *enviarMensaje(void *arg){
 }
 
 
-
-
-
 void *leerDatos(void *arg){
 
     char *nombre;
@@ -235,8 +232,12 @@ void *leerDatos(void *arg){
 
 
 
-int main() {
-    char *nombre = "archivo.txt";    
+int main(int argc, char *argv[]) {
+    if (argc<2){
+         printf("Debe ingresar el nombre del archivo con la extención\n");
+         return 0;
+    }
+    char *nombre = argv[1];
 
     pthread_t hilo1, hilo2;
     pthread_create (&hilo2, NULL, server, NULL);

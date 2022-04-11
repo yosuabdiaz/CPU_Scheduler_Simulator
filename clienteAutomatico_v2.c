@@ -182,15 +182,22 @@ void *generarDatos(void *arg){
 }
 
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc<5){
+         printf("Debe ingresar los valores para el rango de burst y el tiempo de espera.\n");
+         printf("Los primeros 2 parámetros corresponde al rango de burst y deben de ir de 1 a 9.\n");
+         printf("Los últimos 2 parámetros corresponde al rango de espera.\n");
+         return 0;
+    }
+
     srandom(time(NULL));//Establecer una raíz
 
     pthread_t hilo1, hilo2;
 
     T_Parametros prmts;
     
-    prmts.minBurst=1; prmts.maxBurst=5;
-    prmts.minEspera=3; prmts.maxEspera=8;
+    prmts.minBurst = atoi( argv[1] ); prmts.maxBurst = atoi( argv[2] );
+    prmts.minEspera = atoi( argv[3] ); prmts.maxEspera = atoi( argv[4] );
 
     pthread_create (&hilo2, NULL, server, NULL);
     pthread_create (&hilo1, NULL, generarDatos, (void *) &prmts);
