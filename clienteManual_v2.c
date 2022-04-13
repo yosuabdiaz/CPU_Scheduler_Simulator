@@ -113,7 +113,7 @@ void *enviarMensaje(void *arg){
     bzero(buffer_Aux, 1024);
     recv(sockfd, buffer_Aux, sizeof(buffer_Aux),0);
 
-    //printf("Server: %s \n", buffer_Aux);
+    printf("Server: %s \n", buffer_Aux);
 
     close(sockfd);
 
