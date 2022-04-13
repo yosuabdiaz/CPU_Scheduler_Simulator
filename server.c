@@ -20,6 +20,7 @@ int quamtum = 0;
 int semaforo = 0;
 int burst = 0;
 int priority = 0;
+int pid = 0;
 
 void *serverSocket(void *unused){
  //char cadena[100];
@@ -84,8 +85,21 @@ void *serverSocket(void *unused){
             Insert_simple_queue(burst, priority, dataQueue);
             //Responde al cliente que le mando el mensaje
             bzero(buffer, 1024);
-            strcpy(buffer, "This is server, process end!!!!");
-            send(comm_fd, buffer, strlen(buffer), 0);
+
+
+            const char* str1 = "PID del proceso creado: ";
+            char *num;
+            char buffer2[1024];
+            if (asprintf(&num, "%d", pid) == -1) {
+                perror("asprintf");
+            } else {
+                strcat(strcpy(buffer2, str1), num);
+                printf("%s\n", buffer2);
+                free(num);
+            }
+            pid++;
+            
+            send(comm_fd, buffer2, strlen(buffer2), 0);
             semaforo = 1;
         }
         
