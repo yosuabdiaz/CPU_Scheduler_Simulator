@@ -4,9 +4,6 @@
 #include <unistd.h> 
 
 void *revisarSimpleQueue(void *data);
-//void showReady(JobSchedulerThread *job);
-
-
 
 /*
 Recibe los procesos del socket, les pone PID y los mete al ready

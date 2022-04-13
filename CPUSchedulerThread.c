@@ -86,12 +86,7 @@ void *revisarReadyQueue(void *data){
     
 }
 
-/*
-void tables(CPUSchedulerThread *cpu){
 
-
-}
-*/
 
 /*
 Esto lo hace bien si fuera un ejecicio como en clase y siempre el primero proceso entra en el segundo 0

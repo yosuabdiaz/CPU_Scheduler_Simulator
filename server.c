@@ -92,7 +92,7 @@ void *serverSocket(void *unused){
         //Cierra conexion
         close(comm_fd);
     } 
-    return NULL;      
+    //return NULL;      
 }
 void *CreatePlanner(char *argv[]){
     Planner *planner = createPlanner(algoritmo, quamtum); // el parametro pasado por consola es el algoritmo que debe usar 
@@ -115,7 +115,7 @@ void *CreatePlanner(char *argv[]){
 
         }else if (flag==3){ //Para el server sin mostrar nada.
             //PARA LA EJECUCIÓN SIN QUE TENGA QUE SALIR DEL WHILE
-            return;
+            //return;
 
         }else if (flag==4){ //Mostrar cola y parar el server.
             //PARA LA EJECUCIÓN Y PERMITE QUE SALGA DEL WHILE Y SE MUESTRE EL RESUMEN
@@ -124,7 +124,7 @@ void *CreatePlanner(char *argv[]){
     }
     //MUESTRA LAS TABLAS Y DEMÁS DATOS.
     mostrarResumen(planner);
-    return NULL;
+    //return NULL;
 }
 void main(int argc, char *argv[]){
     if (argc > 1){ //contador de parametros

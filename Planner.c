@@ -65,7 +65,7 @@ void mostrarResumen(Planner *p){
     2. Y le restamos el tiempo que estuvo ejecutando que es
         equivalente sumarioria de los burst ejecutados.
     */
-    printf("\nTiempo ocioso del CPU: %d\n",((clock()/CLOCKS_PER_SEC) - p->cpuSchedulerThread->time)-totalBurst);
+    printf("\nTiempo ocioso del CPU: %li\n",((clock()/CLOCKS_PER_SEC) - p->cpuSchedulerThread->time)-totalBurst);
 
     printf("\n\tResumen Mostrado.\n\n");
 
