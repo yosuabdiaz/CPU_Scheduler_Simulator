@@ -96,8 +96,8 @@ void *serverSocket(void *unused){
 }
 void *CreatePlanner(char *argv[]){
     Planner *planner = createPlanner(algoritmo, quamtum); // el parametro pasado por consola es el algoritmo que debe usar 
-    while (flag)
-    {
+    while (flag){
+        
         if (semaforo == 1){
             SimpleNode *node = dequeueSimple(dataQueue);
             insertData(node->burst,node->priority,planner); //Burst,priority
@@ -114,16 +114,16 @@ void *CreatePlanner(char *argv[]){
             flag=1;
 
         }else if (flag==3){ //Para el server sin mostrar nada.
-            //PARA LA EJECUCIÓN
-            flag=0;
+            //PARA LA EJECUCIÓN SIN QUE TENGA QUE SALIR DEL WHILE
+            return;
 
         }else if (flag==4){ //Mostrar cola y parar el server.
-            //MUESTRA LAS TABLAS Y DEMÁS DATOS.
-            mostrarResumen(planner);
-            //PARA LA EJECUCIÓN
+            //PARA LA EJECUCIÓN Y PERMITE QUE SALGA DEL WHILE Y SE MUESTRE EL RESUMEN
             flag=0;
         }
     }
+    //MUESTRA LAS TABLAS Y DEMÁS DATOS.
+    mostrarResumen(planner);
     return NULL;
 }
 void main(int argc, char *argv[]){

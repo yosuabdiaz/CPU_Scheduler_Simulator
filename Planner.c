@@ -58,6 +58,15 @@ void mostrarResumen(Planner *p){
     meanTAT(p->cpuSchedulerThread->finishedQueue);
     meanWT(p->cpuSchedulerThread->finishedQueue);
 
+    int totalBurst = getRunTime(p->cpuSchedulerThread->finishedQueue, p->cpuSchedulerThread->readyQueue);
+    /*Para obtener el tiempo ocioso hacemos:
+    1. Obtenemos el tiempo real de ejecución:
+        tiempo en el que termina - segundo en el que inicia
+    2. Y le restamos el tiempo que estuvo ejecutando que es
+        equivalente sumarioria de los burst ejecutados.
+    */
+    printf("\nTiempo ocioso del CPU: %d\n",((clock()/CLOCKS_PER_SEC) - p->cpuSchedulerThread->time)-totalBurst);
+
     printf("\n\tResumen Mostrado.\n\n");
 
 }

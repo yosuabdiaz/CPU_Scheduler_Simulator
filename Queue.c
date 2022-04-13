@@ -158,3 +158,36 @@ void meanWT(Queue *q){
     }
     printf("Mean WT %i\n",mean/q->length);
 }
+
+//Obtiene los burst ejecutados.
+//Primero los hace con los finalizados y después analisa los que están en ready en el caso de RR
+int getRunTime(Queue *qF,Queue *qR){
+    //Obtiene el primer nodo de la cola que terminaron.
+    Node *temp = qF->first;
+    int time = 0;
+
+    while(temp!=NULL){
+        //Va sumando los burst
+        time = time + temp->process->initialBurst;
+        //Avanza al siguiente nodo
+        temp = temp->next;
+    }
+    //Obtiene el primer nodo de los que aún están en ready.
+    temp = qR->first;
+
+    while(temp!=NULL){
+        //Al ser diferentes significa que estuvo ejecutando esa diferencia
+        if (temp->process->actualBurst != temp->process->initialBurst){
+            //Suma la diferencia de los burst que significa que ejecutó
+            time = time + (temp->process->initialBurst - temp->process->actualBurst);
+        }
+        
+        //Avanza al siguiente nodo
+        temp = temp->next;
+    }
+
+
+    return time;
+
+
+}
